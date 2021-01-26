@@ -1,12 +1,6 @@
 cmake_minimum_required(VERSION 3.18.0)
 project(region_observer)
 
-## Compile as C++11, supported in ROS Kinetic and newer
-# add_compile_options(-std=c++11)
-
-## Find catkin macros and libraries
-## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
-## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   roslint
@@ -14,14 +8,27 @@ find_package(catkin REQUIRED COMPONENTS
   rosunit
   std_msgs
 )
+set(CMAKE_EXPORT_COMPILE_COMMANDS "ON")
+set(CMAKE_BUILD_TYPE "Release")
 
+option(USE_CONAN "Use Conan package manager to fetch dependencies" ON)
+if(USE_CONAN)
+  include(${PROJECT_SOURCE_DIR}/cmake/conan.cmake)
+  conan_check(REQUIRED)
+  conan_cmake_run(
+    REQUIRES boost/1.74.0
+    UPDATE
+    BASIC_SETUP CMAKE_TARGETS
+    NO_OUTPUT_DIRS
+    SETTINGS compiler.libcxx=libstdc++11
+    BUILD missing
+    )
+else()
+  find_package(Boost REQUIRED)
+endif()
 catkin_package(
  INCLUDE_DIRS include
-#  LIBRARIES region_observer
-#  CATKIN_DEPENDS roscopp roslint rostest rosunit std_msgs
-#  DEPENDS system_lib
 )
-
 
 include_directories(
 # include
@@ -35,14 +42,26 @@ add_executable(region
 target_compile_features(region
   PUBLIC
       cxx_std_14
-  )
+      )
+
 target_include_directories(region
   PUBLIC
   include
   ${catkin_INCLUDE_DIRS}
   )
+
+if(USE_CONAN)
 target_link_libraries(region
-  ${catkin_LIBRARIES})
+  PUBLIC
+  ${catkin_LIBRARIES}
+  CONAN_PKG::boost)
+else()
+target_link_libraries(region
+  PUBLIC
+  ${catkin_LIBRARIES}
+  ${Boost_LIBRARIES})
+endif()
+
 add_dependencies(region
   ${catkin_EXPORTED_TARGETS})
 
@@ -75,4 +94,5 @@ if(CATKIN_ENABLE_TESTING)
     PRIVATE
     cxx_std_14)
   target_link_libraries(test-region ${catkin_LIBRARIES})
+  # target_link_libraries(test-region PRIVATE ${catkin_LIBRARIES} CONAN_PKG::Boost)
 endif()

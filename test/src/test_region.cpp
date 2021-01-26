@@ -1,5 +1,6 @@
 #include "region_observer/region_observer.h"
 #include <gtest/gtest.h>
+#include <string>
 
 TEST(JustATest, returnTrue){
   bool val1{true};
