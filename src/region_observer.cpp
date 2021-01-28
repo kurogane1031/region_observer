@@ -9,9 +9,13 @@ void RegionObserver::checkVisited(){
   }
 }
 
+std::vector<int> RegionObserver::whatRegion(){
+  return region_type;
+}
+
 void RegionObserver::checkWithin(){
-  if( (((pose_x < x_lb) && (pose_y < y_lb))  ||
-       ((pose_x > x_ub) && (pose_y > y_ub))) &&
+  if((!((pose_x >= x_lb) && (pose_y >= y_lb)   &&
+        (pose_x <= x_ub) && (pose_y <= y_ub))) &&
       is_within.second == 1)
   {
     is_within.first = false;
@@ -27,8 +31,10 @@ void RegionObserver::checkWithin(){
   }
 }
 
-void RegionObserver::setRegionOfInterest(const double &x_l, const double &y_l,
+void RegionObserver::setRegionOfInterest(const std::vector<int>& what_region,
+                                         const double &x_l, const double &y_l,
                                          const double &x_u, const double &y_u){
+  region_type = what_region,
   x_lb = x_l;
   y_lb = y_l;
   x_ub = x_u;
