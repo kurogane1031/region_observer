@@ -31,7 +31,6 @@ catkin_package(
 )
 
 include_directories(
-# include
   ${catkin_INCLUDE_DIRS}
 )
 
@@ -83,6 +82,8 @@ if(CATKIN_ENABLE_TESTING)
   add_rostest_gtest(test-region
     test/test_region.test
     test/src/test_region.cpp
+    src/region_observer.cpp
+    # src/region_observer_node.cpp
     )
   add_dependencies(test-region ${catkin_EXPORTED_TARGETS})
   target_include_directories(test-region
