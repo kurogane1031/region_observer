@@ -166,6 +166,7 @@ TEST_F(RegionObserverTest, initialStartFromWithin){
   EXPECT_EQ(observer->isVisited(), true);
 }
 
+// Obtain subscribed topic
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

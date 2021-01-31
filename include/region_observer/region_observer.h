@@ -1,8 +1,7 @@
 #ifndef REGION_OBSERVER_REGION_OBSERVER_H_
 #define REGION_OBSERVER_REGION_OBSERVER_H_
-#include <ros/ros.h>
 #include <iostream>
-
+#include <vector>
 namespace perception{
 enum class SignalColor{
   NONE = -1,
@@ -45,8 +44,5 @@ class RegionObserver{
   bool is_visited {false}; //!< \brief checks whether the region has been visited or not
 };
 
-class RegionObserverNode{
-  ros::Subscriber pose_sub {};
-};
 }
 #endif // REGION_OBSERVER_REGION_OBSERVER_H_

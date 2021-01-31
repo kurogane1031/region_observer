@@ -1,4 +1,4 @@
-#include "region_observer/region_observer.h"
+#include "region_observer/region_observer_node.h"
 #include <boost/version.hpp>
 #include <iostream>
 

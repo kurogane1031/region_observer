@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.18.0)
 project(region_observer)
 
 find_package(catkin REQUIRED COMPONENTS
+  itolab_senior_car_msgs
   roscpp
   roslint
   rostest
@@ -9,9 +10,10 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
 )
 set(CMAKE_EXPORT_COMPILE_COMMANDS "ON")
-set(CMAKE_BUILD_TYPE "Release")
+set(CMAKE_BUILD_TYPE "Debug")
+# set(CMAKE_BUILD_TYPE "Release")
 
-option(USE_CONAN "Use Conan package manager to fetch dependencies" ON)
+option(USE_CONAN "Use Conan package manager to fetch dependencies" OFF)
 if(USE_CONAN)
   include(${PROJECT_SOURCE_DIR}/cmake/conan.cmake)
   conan_check(REQUIRED)
@@ -28,11 +30,13 @@ else()
 endif()
 catkin_package(
  INCLUDE_DIRS include
+ CATKIN_DEPENDS
+ itolab_senior_car_msgs
 )
 
-include_directories(
-  ${catkin_INCLUDE_DIRS}
-)
+# include_directories(
+#   ${catkin_INCLUDE_DIRS}
+# )
 
 add_executable(region
   src/region_observer.cpp
