@@ -12,21 +12,23 @@ namespace perception
   class RegionObserverNode
   {
     public:
-      RegionObserverNode() = default;
-      ~RegionObserverNode() = default;
+      RegionObserverNode();
+      ~RegionObserverNode();
       /* void run(); */
+      friend struct RegionObserverNodeTest;
+      RegionObserver rgobs {};
     private:
       ros::NodeHandle nh;
-      ros::Subscriber pose_sub {};
-      ros::Subscriber traffic_signal_sub {};
-      ros::Subscriber lidar_detection_sub {};
+      ros::Subscriber pose_sub;
+      ros::Subscriber traffic_signal_sub;
+      ros::Subscriber lidar_detection_sub;
 
-      ros::Publisher to_servo_pub {};
-      RegionObserver rgobs {};
-      void parseJsonFile(const std::string & filename);
+      ros::Publisher to_servo_pub;
+      void initForRos();
+      // void parseJsonFile(const std::string & filename);
       void callbackFromCurrentPose(const geometry_msgs::PoseStampedConstPtr& msg);
       void callbackFromTrafficSignal(const int& msg);
-      void callbackFromLidarDetection(const itolab_senior_car_msgs::DetectedObjectArrayConstPtr& msg)
+      void callbackFromLidarDetection(const itolab_senior_car_msgs::DetectedObjectArrayConstPtr& msg);
   };
 }
 

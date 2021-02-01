@@ -41,6 +41,7 @@ catkin_package(
 add_executable(region
   src/region_observer.cpp
   src/region_observer_node.cpp
+  src/region_observer_main.cpp
   )
 target_compile_features(region
   PUBLIC
@@ -87,7 +88,6 @@ if(CATKIN_ENABLE_TESTING)
     test/test_region.test
     test/src/test_region.cpp
     src/region_observer.cpp
-    # src/region_observer_node.cpp
     )
   add_dependencies(test-region ${catkin_EXPORTED_TARGETS})
   target_include_directories(test-region
@@ -99,5 +99,21 @@ if(CATKIN_ENABLE_TESTING)
     PRIVATE
     cxx_std_14)
   target_link_libraries(test-region ${catkin_LIBRARIES})
-  # target_link_libraries(test-region PRIVATE ${catkin_LIBRARIES} CONAN_PKG::Boost)
+
+  add_rostest_gtest(test-region-node
+    test/test_region_node.test
+    test/src/test_region_node.cpp
+    src/region_observer.cpp
+    src/region_observer_node.cpp
+    )
+  add_dependencies(test-region-node ${catkin_EXPORTED_TARGETS})
+  target_include_directories(test-region-node
+    PUBLIC
+    include
+    ${catkin_INCLUDE_DIRS}
+    )
+  target_compile_features(test-region-node
+    PRIVATE
+    cxx_std_14)
+  target_link_libraries(test-region-node ${catkin_LIBRARIES})
 endif()
