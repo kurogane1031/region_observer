@@ -9,7 +9,7 @@ void RegionObserver::checkVisited(){
   }
 }
 
-std::vector<int> RegionObserver::whatRegion(){
+std::vector<unsigned int> RegionObserver::whatRegion(){
   return region_type;
 }
 
@@ -31,7 +31,7 @@ void RegionObserver::checkWithin(){
   }
 }
 
-void RegionObserver::setRegionOfInterest(const std::vector<int>& what_region,
+void RegionObserver::setRegionOfInterest(const std::vector<unsigned int>& what_region,
                                          const double &x_l, const double &y_l,
                                          const double &x_u, const double &y_u){
   region_type = what_region,

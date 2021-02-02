@@ -10,17 +10,17 @@ struct RegionObserverTest : public testing::Test {
     double y_l {-0.9};
     double x_u {-0.8};
     double y_u {-0.8};
-    std::vector<int> region_type {1,2,3}; // outdoor, crosswalk, traffic light
+    std::vector<unsigned int> region_type {0,1,1,1,0,0}; // outdoor, crosswalk, traffic light
     observer->setRegionOfInterest(region_type, x_l, y_l, x_u, y_u);
   }
   void TearDown() {}
 };
 
 TEST_F(RegionObserverTest, whatRegionIsThis){
-  std::vector<int> test_what_region {
-    static_cast<int>(perception::RegionType::OUTDOOR),
-    static_cast<int>(perception::RegionType::CROSSWALK),
-    static_cast<int>(perception::RegionType::TRAFFIC_LIGHT)};
+  std::vector<unsigned int> test_what_region (static_cast<size_t>(perception::RegionType::RegionType_size_t), 0);
+  test_what_region[static_cast<unsigned int>(perception::RegionType::OUTDOOR)] = 1;
+  test_what_region[static_cast<unsigned int>(perception::RegionType::CROSSWALK)] = 1;
+  test_what_region[static_cast<unsigned int>(perception::RegionType::TRAFFIC_LIGHT)] = 1;
   EXPECT_EQ(observer->whatRegion(),test_what_region);
 }
 

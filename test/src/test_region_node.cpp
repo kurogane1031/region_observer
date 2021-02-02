@@ -9,7 +9,7 @@ struct RegionObserverNodeTest : public testing::Test{
   double & py = position.pose.position.y;
   virtual void SetUp(){
     observer = std::make_unique<perception::RegionObserverNode>();
-    std::vector<int> region_type {1, 2, 3};
+    std::vector<unsigned int> region_type {0,1,1,1,0,0}; // outdoor, crosswalk, traffic light
 
     observer->rgobs.setRegionOfInterest(region_type, 1.0, 1.0, 3.0, 3.0);
     position.pose.position.x = 1.5;
@@ -52,16 +52,28 @@ TEST_F(RegionObserverNodeTest, checkIfVisited){
   EXPECT_EQ(observer->rgobs.isVisited(), true);
 }
 
-TEST_F(RegionObserverNodeTest, isWithinAndGetData){
+TEST_F(RegionObserverNodeTest, isWithinAndGetSensorData){
   observer->rgobs.updatePosition(px, py);
   observer->rgobs.checkWithin();
   EXPECT_EQ(observer->rgobs.isWithin(), true);
 
   // region observer class should only tell what region the host is currently in.
   // whatever commands should be handle by ros node
+  // get traffic light information and publish suitable command
   observer->getCommand();
   EXPECT_EQ(observer->accelCommand(), 0);
 }
+
+// TEST_F(RegionObserverNodeTest, notWithinAndIgnoreSensorData){
+//   observer->rgobs.updatePosition(px, py);
+//   observer->rgobs.checkWithin();
+//   EXPECT_EQ(observer->rgobs.isWithin(), false);
+
+  // region observer class should only tell what region the host is currently in.
+  // whatever commands should be handle by ros node
+  // observer->getCommand();
+  // EXPECT_EQ(observer->accelCommand(), 1);
+// }
 
 int main(int argc, char **argv) {
     testing::InitGoogleTest(&argc, argv);

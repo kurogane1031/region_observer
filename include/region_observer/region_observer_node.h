@@ -17,6 +17,8 @@ namespace perception
       /* void run(); */
       friend struct RegionObserverNodeTest;
       RegionObserver rgobs {};
+      void getCommand();
+      unsigned int accelCommand();
     private:
       ros::NodeHandle nh;
       ros::Subscriber pose_sub;
