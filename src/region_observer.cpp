@@ -39,6 +39,14 @@ void RegionObserver::setRegionOfInterest(const std::vector<unsigned int>& what_r
   y_lb = y_l;
   x_ub = x_u;
   y_ub = y_u;
+  if(x_lb > x_ub)
+  {
+    std::swap(x_lb, x_ub);
+  }
+  if(y_lb > y_ub)
+  {
+    std::swap(y_lb, y_ub);
+  }
 }
 
 bool RegionObserver::isWithin(){

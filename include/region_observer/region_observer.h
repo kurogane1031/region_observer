@@ -10,8 +10,8 @@ enum class SignalColor{
   GREEN = 3,
 };
 
-enum class RegionType{
-  INDOOR,
+enum class RegionType : size_t{
+  INDOOR = 0,
   OUTDOOR,
   CROSSWALK,
   TRAFFIC_LIGHT, // Separated for case like Crosswalk without traffic light etc.

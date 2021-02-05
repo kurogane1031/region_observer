@@ -1,0 +1,3 @@
+id, xl, yl, xu, yu, indoor, outdoor, crosswalk, traffic_light, door, automated_door
+0,13.943108,-1.334371,18.612106,-3.136289, 0, 1, 0, 1, 0, 0
+1,21.483109,-1.008725,25.409983,-3.29981, 0, 1, 0, 1, 0, 0

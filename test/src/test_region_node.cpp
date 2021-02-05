@@ -64,16 +64,46 @@ TEST_F(RegionObserverNodeTest, isWithinAndGetSensorData){
   EXPECT_EQ(observer->accelCommand(), 0);
 }
 
-// TEST_F(RegionObserverNodeTest, notWithinAndIgnoreSensorData){
-//   observer->rgobs.updatePosition(px, py);
-//   observer->rgobs.checkWithin();
-//   EXPECT_EQ(observer->rgobs.isWithin(), false);
+TEST_F(RegionObserverNodeTest, parseAndCheck){
+  std::string file{"/home/zulfaqar/develop/ros/catkin_ws/src/region_observer/param/regions.csv"};
+  observer->parseConfigFile(file);
+  itolab_senior_car_msgs::RegionObserver reg = observer->regions.region[0];
+  ASSERT_FLOAT_EQ(reg.lower_bound.point.x, 13.943108);
+  ASSERT_FLOAT_EQ(reg.lower_bound.point.y, -1.334371);
 
-  // region observer class should only tell what region the host is currently in.
-  // whatever commands should be handle by ros node
-  // observer->getCommand();
-  // EXPECT_EQ(observer->accelCommand(), 1);
-// }
+  observer->rgobs.setRegionOfInterest(reg.region_type,
+                                      reg.lower_bound.point.x,
+                                      reg.lower_bound.point.y,
+                                      reg.upper_bound.point.x,
+                                      reg.upper_bound.point.y);
+
+  position.pose.position.x = 1.862637;
+  position.pose.position.y = -0.778334;
+
+  observer->rgobs.updatePosition(px, py);
+  observer->rgobs.checkWithin();
+  observer->rgobs.checkVisited();
+  EXPECT_EQ(observer->rgobs.isWithin(), false);
+  EXPECT_EQ(observer->rgobs.isVisited(), false);
+  EXPECT_EQ(observer->rgobs.whatRegion(), reg.region_type);
+  position.pose.position.x = 14.789078;
+  position.pose.position.y = -1.999240;
+
+  observer->rgobs.updatePosition(px, py);
+  observer->rgobs.checkWithin();
+  observer->rgobs.checkVisited();
+  EXPECT_EQ(observer->rgobs.isWithin(), true);
+  EXPECT_EQ(observer->rgobs.isVisited(), false);
+
+  position.pose.position.x = 23.777065;
+  position.pose.position.y = -2.297022;
+
+  observer->rgobs.updatePosition(px, py);
+  observer->rgobs.checkWithin();
+  observer->rgobs.checkVisited();
+  EXPECT_EQ(observer->rgobs.isWithin(), false);
+  EXPECT_EQ(observer->rgobs.isVisited(), true);
+}
 
 int main(int argc, char **argv) {
     testing::InitGoogleTest(&argc, argv);

@@ -8,7 +8,7 @@ find_package(catkin REQUIRED COMPONENTS
   rostest
   rosunit
   std_msgs
-)
+  )
 set(CMAKE_EXPORT_COMPILE_COMMANDS "ON")
 set(CMAKE_BUILD_TYPE "Debug")
 # set(CMAKE_BUILD_TYPE "Release")
@@ -33,10 +33,6 @@ catkin_package(
  CATKIN_DEPENDS
  itolab_senior_car_msgs
 )
-
-# include_directories(
-#   ${catkin_INCLUDE_DIRS}
-# )
 
 add_executable(region
   src/region_observer.cpp
@@ -81,6 +77,10 @@ install(
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
   )
 
+install(
+  DIRECTORY param/
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/param
+  )
 if(CATKIN_ENABLE_TESTING)
   find_package(rostest REQUIRED)
 
@@ -111,6 +111,11 @@ if(CATKIN_ENABLE_TESTING)
     PUBLIC
     include
     ${catkin_INCLUDE_DIRS}
+    )
+  target_compile_options(test-region-node
+    PRIVATE
+    $<$<CXX_COMPILER_ID:Clang>:-Wall>
+    $<$<CXX_COMPILER_ID:GNU>:-Wall>
     )
   target_compile_features(test-region-node
     PRIVATE
