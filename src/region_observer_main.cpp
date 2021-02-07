@@ -2,7 +2,8 @@
 #include <boost/version.hpp>
 #include <iostream>
 
-int main(){
-  perception::RegionObserver region;
-  std::cout << "Boost version: " << BOOST_LIB_VERSION << "\n";
+int main(int argc, char** argv){
+  ros::init(argc, argv, "region_observer");
+  perception::RegionObserverNode ron;
+  ron.run();
 }

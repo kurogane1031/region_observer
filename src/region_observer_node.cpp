@@ -3,9 +3,11 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <ros/console.h>
 namespace perception{
 RegionObserverNode::RegionObserverNode()
 {
+  ROS_INFO_STREAM("Initializing");
   initForRos();
 }
 
@@ -70,11 +72,26 @@ void RegionObserverNode::parseConfigFile(const std::string &filename){
 }
 
 void RegionObserverNode::initForRos(){
-  pose_sub = nh.subscribe("current_pose", 10, &RegionObserverNode::callbackFromCurrentPose, this); parseConfigFile("/home/zulfaqar/develop/ros/catkin_ws/src/region_observer/param/regions.csv");
+  parseConfigFile("/home/zulfaqar/develop/ros/catkin_ws/src/region_observer/param/regions.csv");
+  itolab_senior_car_msgs::RegionObserver reg = regions.region[0];
+  rgobs.setRegionOfInterest(reg.region_type,
+                            reg.lower_bound.point.x,
+                            reg.lower_bound.point.y,
+                            reg.upper_bound.point.x,
+                            reg.upper_bound.point.y);
+  pose_sub = nh.subscribe("current_pose", 10, &RegionObserverNode::callbackFromCurrentPose, this);
 }
 
 void RegionObserverNode::callbackFromCurrentPose(const geometry_msgs::PoseStampedConstPtr& msg){
-
+  auto &px = msg->pose.position.x;
+  auto &py = msg->pose.position.y;
+  rgobs.updatePosition(px, py);
+  rgobs.checkWithin();
+  rgobs.checkVisited();
+  // TODO: update is_visited, is_within and is_within_flag
+  // TODO: count++ for RegionObserverArray
+  ROS_INFO("");
+  ROS_INFO("within %d, visited %d",rgobs.isWithin(), rgobs.isVisited());
 }
 
 void RegionObserverNode::callbackFromTrafficSignal(const int& msg){
@@ -83,5 +100,12 @@ void RegionObserverNode::callbackFromTrafficSignal(const int& msg){
 
 void RegionObserverNode::callbackFromLidarDetection(const itolab_senior_car_msgs::DetectedObjectArrayConstPtr& msg){
 
+}
+
+void RegionObserverNode::run(){
+  ROS_INFO_STREAM("START REGIONNNNNNN OBSERVEERRRRRR");
+  while(ros::ok()){
+    ros::spinOnce();
+  }
 }
 }

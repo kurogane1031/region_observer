@@ -29,7 +29,7 @@ namespace perception
       void callbackFromTrafficSignal(const int& msg);
       void callbackFromLidarDetection(const itolab_senior_car_msgs::DetectedObjectArrayConstPtr& msg);
       itolab_senior_car_msgs::RegionObserverArray regions;
-
+      void run();
     private:
       ros::NodeHandle nh;
       ros::Subscriber pose_sub;
