@@ -29,7 +29,9 @@ class RegionObserver{
                            const double &x_u, const double &y_u);
   void updatePosition(const double& px, const double& py);
   bool isWithin();
+  int isWithinFlag();
   bool isVisited();
+  void resetFlags();
   std::vector<unsigned int> whatRegion();
 
  private:

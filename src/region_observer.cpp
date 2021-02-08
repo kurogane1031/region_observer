@@ -33,7 +33,8 @@ void RegionObserver::checkWithin(){
 
 void RegionObserver::setRegionOfInterest(const std::vector<unsigned int>& what_region,
                                          const double &x_l, const double &y_l,
-                                         const double &x_u, const double &y_u){
+                                         const double &x_u, const double &y_u)
+{
   region_type = what_region,
   x_lb = x_l;
   y_lb = y_l;
@@ -49,12 +50,25 @@ void RegionObserver::setRegionOfInterest(const std::vector<unsigned int>& what_r
   }
 }
 
-bool RegionObserver::isWithin(){
+bool RegionObserver::isWithin()
+{
   return is_within.first;
 }
 bool RegionObserver::isVisited()
 {
   return is_visited;
+}
+
+int RegionObserver::isWithinFlag()
+{
+  return is_within.second;
+}
+
+void RegionObserver::resetFlags()
+{
+  is_within.first = false;
+  is_within.second = 0;
+  is_visited = false;
 }
 void RegionObserver::updatePosition(const double& px, const double& py)
 {

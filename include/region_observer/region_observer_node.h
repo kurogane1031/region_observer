@@ -36,7 +36,9 @@ namespace perception
       ros::Subscriber traffic_signal_sub;
       ros::Subscriber lidar_detection_sub;
       ros::Publisher to_servo_pub;
-
+      size_t region_numbers {0};
+      size_t region_idx {0};
+      itolab_senior_car_msgs::RegionObserver reg {};
   };
 }
 

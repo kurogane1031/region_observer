@@ -69,16 +69,10 @@ void RegionObserverNode::parseConfigFile(const std::string &filename){
     }
     regions.region.push_back(region);
   }
+  region_numbers = regions.region.size();
 }
 
 void RegionObserverNode::initForRos(){
-  parseConfigFile("/home/zulfaqar/develop/ros/catkin_ws/src/region_observer/param/regions.csv");
-  itolab_senior_car_msgs::RegionObserver reg = regions.region[0];
-  rgobs.setRegionOfInterest(reg.region_type,
-                            reg.lower_bound.point.x,
-                            reg.lower_bound.point.y,
-                            reg.upper_bound.point.x,
-                            reg.upper_bound.point.y);
   pose_sub = nh.subscribe("current_pose", 10, &RegionObserverNode::callbackFromCurrentPose, this);
 }
 
@@ -88,10 +82,31 @@ void RegionObserverNode::callbackFromCurrentPose(const geometry_msgs::PoseStampe
   rgobs.updatePosition(px, py);
   rgobs.checkWithin();
   rgobs.checkVisited();
-  // TODO: update is_visited, is_within and is_within_flag
-  // TODO: count++ for RegionObserverArray
-  ROS_INFO("");
-  ROS_INFO("within %d, visited %d",rgobs.isWithin(), rgobs.isVisited());
+
+  reg.is_visited = rgobs.isVisited();
+  reg.is_within = rgobs.isWithin();
+  if(region_idx < region_numbers)
+  {
+    ROS_INFO("idx %ld, within %d, visited %d",region_idx, reg.is_within, reg.is_visited);
+  }
+  else
+  {
+    ROS_INFO("All regions visited. Yay!!!");
+  }
+
+  if(reg.is_visited == true && region_idx != region_numbers){
+    ++region_idx;
+    rgobs.resetFlags();
+    reg = regions.region[region_idx];
+    reg.is_visited = regions.region[region_idx].is_visited;
+    reg.is_within = regions.region[region_idx].is_within;
+    reg.is_within_flag = regions.region[region_idx].is_within_flag;
+    rgobs.setRegionOfInterest(reg.region_type,
+                              reg.lower_bound.point.x,
+                              reg.lower_bound.point.y,
+                              reg.upper_bound.point.x,
+                              reg.upper_bound.point.y);
+  }
 }
 
 void RegionObserverNode::callbackFromTrafficSignal(const int& msg){
@@ -104,6 +119,13 @@ void RegionObserverNode::callbackFromLidarDetection(const itolab_senior_car_msgs
 
 void RegionObserverNode::run(){
   ROS_INFO_STREAM("START REGIONNNNNNN OBSERVEERRRRRR");
+  parseConfigFile("/home/zulfaqar/develop/ros/catkin_ws/src/region_observer/param/regions.csv");
+  reg = regions.region[region_idx];
+  rgobs.setRegionOfInterest(reg.region_type,
+                            reg.lower_bound.point.x,
+                            reg.lower_bound.point.y,
+                            reg.upper_bound.point.x,
+                            reg.upper_bound.point.y);
   while(ros::ok()){
     ros::spinOnce();
   }

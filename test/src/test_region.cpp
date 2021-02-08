@@ -166,6 +166,65 @@ TEST_F(RegionObserverTest, initialStartFromWithin){
   EXPECT_EQ(observer->isVisited(), true);
 }
 
+TEST_F(RegionObserverTest, visitTwoDifferentRegion){
+  double px = -0.75;
+  double py = -0.75;
+  observer->updatePosition(px, py);
+  observer->checkWithin();
+  observer->checkVisited();
+  ASSERT_EQ(observer->isWithin(), false);
+  ASSERT_EQ(observer->isVisited(), false);
+
+  // going down
+  px = -0.81;
+  py = -0.81;
+  observer->updatePosition(px, py);
+  observer->checkWithin();
+  observer->checkVisited();
+  ASSERT_EQ(observer->isWithin(), true);
+  ASSERT_EQ(observer->isVisited(), false);
+
+  // going down
+  px = -0.91;
+  py = -0.91;
+  observer->updatePosition(px, py);
+  observer->checkWithin();
+  observer->checkVisited();
+  ASSERT_EQ(observer->isWithin(), false);
+  EXPECT_EQ(observer->isVisited(), true);
+
+  double x_l {-1.2};
+  double y_l {-1.2};
+  double x_u {-1.0};
+  double y_u {-1.0};
+  std::vector<unsigned int> region_type {0,1,1,1,0,0}; // outdoor, crosswalk, traffic light
+  observer->setRegionOfInterest(region_type, x_l, y_l, x_u, y_u);
+  observer->resetFlags(); // reset is_within and is_visited
+  // assume updatePosition always running
+  observer->updatePosition(px, py);
+  observer->checkWithin();
+  observer->checkVisited();
+  EXPECT_EQ(observer->isWithin(), false);
+  EXPECT_EQ(observer->isVisited(), false);
+
+  // going down
+  px = -1.1;
+  py = -1.1;
+  observer->updatePosition(px, py);
+  observer->checkWithin();
+  observer->checkVisited();
+  ASSERT_EQ(observer->isWithin(), true);
+  ASSERT_EQ(observer->isVisited(), false);
+
+  // going down
+  px = -1.3;
+  py = -1.3;
+  observer->updatePosition(px, py);
+  observer->checkWithin();
+  observer->checkVisited();
+  ASSERT_EQ(observer->isWithin(), false);
+  EXPECT_EQ(observer->isVisited(), true);
+}
 // Obtain subscribed topic
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
