@@ -120,14 +120,19 @@ void RegionObserverNode::callbackFromLidarDetection(const itolab_senior_car_msgs
 
 void RegionObserverNode::run(){
   ROS_INFO_STREAM("START REGIONNNNNNN OBSERVEERRRRRR");
-  parseConfigFile("/home/zulfaqar/develop/ros/catkin_ws/src/region_observer/param/regions.csv");
+  parseConfigFile("/home/seniorcar02/ros_ws/src/region_observer/param/regions-oomiya0208.csv");
   reg = regions.region[region_idx];
   rgobs.setRegionOfInterest(reg.region_type,
                             reg.lower_bound.point.x,
                             reg.lower_bound.point.y,
                             reg.upper_bound.point.x,
                             reg.upper_bound.point.y);
+
   while(ros::ok()){
+  reg.header.frame_id = "map";
+  reg.header.stamp = ros::Time();
+  to_servo_pub.publish(reg);
+
     ros::spinOnce();
   }
 }
