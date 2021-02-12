@@ -74,6 +74,7 @@ void RegionObserverNode::parseConfigFile(const std::string &filename){
 
 void RegionObserverNode::initForRos(){
   pose_sub = nh.subscribe("current_pose", 10, &RegionObserverNode::callbackFromCurrentPose, this);
+  to_servo_pub = nh.advertise<itolab_senior_car_msgs::RegionObserver>("/region_information", 5);
 }
 
 void RegionObserverNode::callbackFromCurrentPose(const geometry_msgs::PoseStampedConstPtr& msg){
